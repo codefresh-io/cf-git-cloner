@@ -61,7 +61,7 @@ if [ -d "$CLONE_DIR" ]; then
   git_retry git remote prune origin
 
   echo "Fetching the updates from origin"
-  git_retry git fetch --tags -v
+  git_retry git fetch --tags
 
   if [ -n "$REVISION" ]; then
 
