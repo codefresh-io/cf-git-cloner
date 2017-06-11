@@ -13,7 +13,7 @@ git_retry () {
    set +e
    RETRY_ON_SIGNAL=128
    COMMAND=$@
-   local TRY_NUM=1 MAX_TRIES=3 RETRY_WAIT=60
+   local TRY_NUM=1 MAX_TRIES=4 RETRY_WAIT=5
    until [[ "$TRY_NUM" -ge "$MAX_TRIES" ]]; do
       $COMMAND
       EXIT_CODE=$?
