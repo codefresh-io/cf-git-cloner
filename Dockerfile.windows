@@ -1,0 +1,28 @@
+FROM microsoft/windowsservercore:1709
+
+COPY .ssh/ C:/cygwin64/.ssh/
+COPY ./start.sh C:/cygwin64/start.sh
+
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop';"]
+
+RUN $url = 'https://cygwin.com/setup-x86_64.exe'; \
+	Write-Host ('Downloading {0} ...' -f $url); \
+	Invoke-WebRequest -Uri $url -OutFile 'C:/setup-x86_64.exe'; \
+	\
+	Write-Host 'Installing ...'; \
+	New-Item -ItemType directory -Path 'C:/tmp'; \
+	Start-Process "C:/setup-x86_64.exe" -NoNewWindow -Wait -PassThru -ArgumentList @('-q','-v','-n','-B','-R','C:/cygwin64','-l','C:/tmp','-s','http://mirror.pkill.info/cygwin/','-P','default,git,openssl'); \
+	\
+	Write-Host 'Removing ...'; \
+	Remove-Item -Path 'C:/tmp' -Force -Recurse -ErrorAction Ignore; \
+	\
+	Write-Host 'Verifying install ...'; \
+	Start-Process "C:/cygwin64/bin/cygcheck.exe" -NoNewWindow -Wait -PassThru -ArgumentList @('-c'); \
+	\
+	Write-Host 'Complete.';
+
+SHELL ["C:/cygwin64/bin/sh", "-l", "-c"]
+
+RUN 'sed -i "s/\r$//" /start.sh'
+
+CMD '/start.sh'

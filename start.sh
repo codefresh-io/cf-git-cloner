@@ -36,12 +36,13 @@ set -e
 
 [ -z "$REVISION" ] && (echo "missing REVISION var" | tee /dev/stderr) && exit 1
 
-echo "$PRIVATE_KEY" > /root/.ssh/codefresh
-chmod 700 ~/.ssh/
-chmod 600 ~/.ssh/*
+echo "$PRIVATE_KEY" | tr -d '\n' > /.ssh/codefresh
+chmod 700 /.ssh/
+chmod 600 /.ssh/*
 
 cd $WORKING_DIRECTORY
 
+HOME=/home
 git config --global advice.detachedhead false
 git config --global credential.helper "/bin/sh -c 'echo username=$USERNAME; echo password=$PASSWORD'"
 
