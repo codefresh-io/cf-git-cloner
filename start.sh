@@ -40,6 +40,7 @@ echo "$PRIVATE_KEY" > /root/.ssh/codefresh
 chmod 700 ~/.ssh/
 chmod 600 ~/.ssh/*
 
+mkdir -p "$WORKING_DIRECTORY"
 cd $WORKING_DIRECTORY
 
 git config --global advice.detachedhead false
