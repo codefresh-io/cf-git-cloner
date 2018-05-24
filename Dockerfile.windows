@@ -1,8 +1,5 @@
 FROM microsoft/windowsservercore:1709
 
-COPY .ssh/ C:/cygwin64/.ssh/
-COPY ./start.sh C:/cygwin64/start.sh
-
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop';"]
 
 RUN $url = 'https://cygwin.com/setup-x86_64.exe'; \
@@ -21,8 +18,15 @@ RUN $url = 'https://cygwin.com/setup-x86_64.exe'; \
 	\
 	Write-Host 'Complete.';
 
+RUN $ACL=Get-Acl -Path 'C:\'; \
+    Set-Acl -Path 'C:\cygwin64\' -AclObject $ACL
+
 SHELL ["C:/cygwin64/bin/sh", "-l", "-c"]
+
+COPY .ssh/ C:/cygwin64/.ssh/
+COPY ./start.sh C:/cygwin64/start.sh
 
 RUN 'sed -i "s/\r$//" /start.sh'
 
-CMD '/start.sh'
+ENTRYPOINT ["C:/cygwin64/bin/sh", "-l", "-c"]
+CMD ["/start.sh"]
