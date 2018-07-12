@@ -20,7 +20,7 @@ git_retry () {
       if [[ $EXIT_CODE == 0 ]]; then
         break
       elif [[ $EXIT_CODE == "$RETRY_ON_SIGNAL" ]]; then
-        echo "$COMMAND failed with Exit Code $EXIT_CODE - try $TRY_NUM "
+        echo "Failed with Exit Code $EXIT_CODE - try $TRY_NUM "
         TRY_NUM=$(( ${TRY_NUM} + 1 ))
         sleep $RETRY_WAIT
       else
