@@ -53,29 +53,44 @@ if [ -d "$CLONE_DIR" ]; then
   echo "Preparing to update $REPO"
   cd $CLONE_DIR
 
-  # Reset the remote URL because the embedded user token may have changed
-  git remote set-url origin $REPO
+  # Make sure the CLONE_DIR folder is a git folder
+  if git status &> /dev/null ; then
+      # Reset the remote URL because the embedded user token may have changed
+      git remote set-url origin $REPO
 
-  echo "Cleaning up the working directory"
-  git reset -q --hard
-  git clean -df
-  git gc
-  git_retry git remote prune origin
+      echo "Cleaning up the working directory"
+      git reset -q --hard
+      git clean -df
+      git gc
+      git_retry git remote prune origin
 
-  echo "Fetching the updates from origin"
-  git_retry git fetch --tags
+      echo "Fetching the updates from origin"
+      git_retry git fetch --tags
 
-  if [ -n "$REVISION" ]; then
+      if [ -n "$REVISION" ]; then
 
-      echo "Updating $REPO to revision $REVISION"
-      git checkout $REVISION
+          echo "Updating $REPO to revision $REVISION"
+          git checkout $REVISION
 
-      CURRENT_BRANCH="`git branch 2>/dev/null | grep '^*' | cut -d' ' -f2-`"
+          CURRENT_BRANCH="`git branch 2>/dev/null | grep '^*' | cut -d' ' -f2-`"
 
-      # If the revision is identical to the current branch we can rebase it with the latest changes. This isn't needed when running detached
-      if [ "$REVISION" == "$CURRENT_BRANCH" ]; then
-	     echo 'Rebasing current branch $REVISION to latest changes...'
-         git rebase
+          # If the revision is identical to the current branch we can rebase it with the latest changes. This isn't needed when running detached
+          if [ "$REVISION" == "$CURRENT_BRANCH" ]; then
+             echo 'Rebasing current branch $REVISION to latest changes...'
+             git rebase
+          fi
+      fi
+  else
+      # The folder already exists but it is not a git repository
+      # Clean folder and clone a fresh copy on current directory
+      cd ..
+      rm -rf $CLONE_DIR
+      echo "cloning $REPO"
+      git_retry git clone $REPO $CLONE_DIR
+      cd $CLONE_DIR
+
+      if [ -n "$REVISION" ]; then
+        git checkout $REVISION
       fi
   fi
 else
