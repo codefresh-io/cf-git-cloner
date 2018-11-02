@@ -46,6 +46,13 @@ cd $WORKING_DIRECTORY
 git config --global advice.detachedhead false
 git config --global credential.helper "/bin/sh -c 'echo username=$USERNAME; echo password=$PASSWORD'"
 
+# Check if we are building a fork
+if [ ! -z "$FORK" ]; then
+  echo "Fork detected: $FORK"
+  echo "Base repo: $REPO"
+  REPO="$FORK"
+fi
+
 # Check if the cloned dir already exists from previous builds
 if [ -d "$CLONE_DIR" ]; then
 
