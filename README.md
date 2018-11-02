@@ -1,6 +1,8 @@
 # cf-git-cloner
 
-## Testing changes in local dev environment
+## Local Development
+
+### Integrating with the entire dev environment
 
 First, run the following command to point your shell at the dev environment docker daemon:
 ```
