@@ -63,7 +63,7 @@ if [ -d "$CLONE_DIR" ]; then
       git clean -df
       git gc
       git_retry git remote prune origin
-      git tag -l | xargs git tag -d
+      git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*"
 
       echo "Fetching the updates from origin"
       git_retry git fetch --tags
