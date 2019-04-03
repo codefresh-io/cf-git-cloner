@@ -28,5 +28,7 @@ COPY ./start.sh C:/cygwin64/start.sh
 
 RUN 'sed -i "s/\r$//" /start.sh'
 
+LABEL owner="codefresh.io"
+
 ENTRYPOINT ["C:/cygwin64/bin/sh", "-l", "-c"]
 CMD ["/start.sh"]
