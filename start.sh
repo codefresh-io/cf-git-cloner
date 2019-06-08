@@ -34,6 +34,8 @@ git_retry () {
 trap exit_trap EXIT
 set -e
 
+WORKING_DIRECTORY="C:${WORKING_DIRECTORY}"
+
 [ -z "$REVISION" ] && (echo "missing REVISION var" | tee /dev/stderr) && exit 1
 
 echo "$PRIVATE_KEY" | tr -d '\n' > /.ssh/codefresh
