@@ -103,7 +103,7 @@ else
     git remote add origin $REPO
     git config core.sparsecheckout true 
     echo "$SOURCE/*" >> .git/info/sparse-checkout 
-    git pull --depth=1 origin master 
+    git pull --depth=1 origin $REVISION  
  else
  # Clone a fresh copy
   echo "cloning $REPO"
