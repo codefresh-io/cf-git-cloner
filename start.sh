@@ -96,7 +96,17 @@ if [ -d "$CLONE_DIR" ]; then
   fi
 else
 
-  # Clone a fresh copy
+ if [ -n "$SPARE_CHECKOUT" ]; then
+    echo "spare checkout"
+    git init $CLONE_DIR
+    chmod -R 774 $CLONE_DIR
+    cd $CLONE_DIR
+    git remote add origin $REPO
+    git config core.sparsecheckout true 
+    echo "$SOURCE/*" >> .git/info/sparse-checkout 
+    git pull --depth=1 origin $REVISION  
+ else
+ # Clone a fresh copy
   echo "cloning $REPO"
   git_retry git clone $REPO $CLONE_DIR
   cd $CLONE_DIR
@@ -104,4 +114,7 @@ else
   if [ -n "$REVISION" ]; then
     git checkout $REVISION
   fi
+
+ fi
+  
 fi
