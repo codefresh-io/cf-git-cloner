@@ -48,12 +48,17 @@ git config --global credential.helper "/bin/sh -c 'echo username=$USERNAME; echo
 
 if [ -n "$SPARE_CHECKOUT" ]; then
     echo "spare checkout"
-    git init $CLONE_DIR
-    chmod -R 774 $CLONE_DIR
-    cd $CLONE_DIR
-    git remote add origin $REPO
-    git config core.sparsecheckout true 
-    echo "$SOURCE/*" >> .git/info/sparse-checkout 
+    if [ -d "$CLONE_DIR" ]; then
+      echo folder exists - no need to init
+    else
+      git init $CLONE_DIR
+      chmod -R 774 $CLONE_DIR
+      cd $CLONE_DIR
+      git remote add origin $REPO
+      git config core.sparsecheckout true 
+      echo "$SOURCE/*" >> .git/info/sparse-checkout 
+    fi
+    
     git pull --depth=1 origin $REVISION 
     exit 0
  fi
