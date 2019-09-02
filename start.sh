@@ -50,6 +50,7 @@ if [ -n "$SPARE_CHECKOUT" ]; then
     echo "spare checkout"
     if [ -d "$CLONE_DIR" ]; then
       echo folder exists - no need to init
+      cd $CLONE_DIR
     else
       git init $CLONE_DIR
       chmod -R 774 $CLONE_DIR
