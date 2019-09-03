@@ -46,6 +46,24 @@ cd $WORKING_DIRECTORY
 git config --global advice.detachedhead false
 git config --global credential.helper "/bin/sh -c 'echo username=$USERNAME; echo password=$PASSWORD'"
 
+if [ -n "$SPARE_CHECKOUT" ]; then
+    echo "spare checkout"
+    if [ -d "$CLONE_DIR" ]; then
+      echo "folder exists - no need to init"
+      cd $CLONE_DIR
+    else
+      git init $CLONE_DIR
+      chmod -R 774 $CLONE_DIR
+      cd $CLONE_DIR
+      git remote add origin $REPO
+      git config core.sparsecheckout true 
+      echo "$SOURCE/*" >> .git/info/sparse-checkout 
+    fi
+    
+    git pull --depth=1 origin $REVISION 
+    exit 0
+ fi
+
 # Check if the cloned dir already exists from previous builds
 if [ -d "$CLONE_DIR" ]; then
 
@@ -96,16 +114,6 @@ if [ -d "$CLONE_DIR" ]; then
   fi
 else
 
- if [ -n "$SPARE_CHECKOUT" ]; then
-    echo "spare checkout"
-    git init $CLONE_DIR
-    chmod -R 774 $CLONE_DIR
-    cd $CLONE_DIR
-    git remote add origin $REPO
-    git config core.sparsecheckout true 
-    echo "$SOURCE/*" >> .git/info/sparse-checkout 
-    git pull --depth=1 origin $REVISION  
- else
  # Clone a fresh copy
   echo "cloning $REPO"
   git_retry git clone $REPO $CLONE_DIR
@@ -115,6 +123,4 @@ else
     git checkout $REVISION
   fi
 
- fi
-  
 fi
