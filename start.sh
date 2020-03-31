@@ -104,7 +104,6 @@ if [ -d "$CLONE_DIR" ]; then
       # Clean folder and clone a fresh copy on current directory
       cd ..
       rm -rf $CLONE_DIR
-      echo "cloning $REPO"
       git_retry git clone $REPO $CLONE_DIR
       cd $CLONE_DIR
 
@@ -115,7 +114,6 @@ if [ -d "$CLONE_DIR" ]; then
 else
 
  # Clone a fresh copy
-  echo "cloning $REPO"
   git_retry git clone $REPO $CLONE_DIR
   cd $CLONE_DIR
 
