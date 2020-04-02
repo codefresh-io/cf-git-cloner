@@ -68,7 +68,7 @@ if [ -n "$SPARE_CHECKOUT" ]; then
 if [ -d "$CLONE_DIR" ]; then
 
   # Cloned dir already exists from previous builds so just fetch all the changes
-  echo "Preparing to update repository"
+  echo "Preparing to update repository $CLONE_DIR"
   cd $CLONE_DIR
 
   # Make sure the CLONE_DIR folder is a git folder
