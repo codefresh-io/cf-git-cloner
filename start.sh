@@ -68,7 +68,7 @@ if [ -n "$SPARE_CHECKOUT" ]; then
 if [ -d "$CLONE_DIR" ]; then
 
   # Cloned dir already exists from previous builds so just fetch all the changes
-  echo "Preparing to update $REPO"
+  echo "Preparing to update repository $REPO_RAW"
   cd $CLONE_DIR
 
   # Make sure the CLONE_DIR folder is a git folder
@@ -88,7 +88,7 @@ if [ -d "$CLONE_DIR" ]; then
 
       if [ -n "$REVISION" ]; then
 
-          echo "Updating $REPO to revision $REVISION"
+          echo "Updating repository to revision $REVISION"
           git checkout $REVISION
 
           CURRENT_BRANCH="`git branch 2>/dev/null | grep '^*' | cut -d' ' -f2-`"
@@ -104,7 +104,6 @@ if [ -d "$CLONE_DIR" ]; then
       # Clean folder and clone a fresh copy on current directory
       cd ..
       rm -rf $CLONE_DIR
-      echo "cloning $REPO"
       git_retry git clone $REPO $CLONE_DIR
       cd $CLONE_DIR
 
@@ -115,7 +114,6 @@ if [ -d "$CLONE_DIR" ]; then
 else
 
  # Clone a fresh copy
-  echo "cloning $REPO"
   git_retry git clone $REPO $CLONE_DIR
   cd $CLONE_DIR
 
