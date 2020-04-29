@@ -36,9 +36,20 @@ set -e
 
 [ -z "$REVISION" ] && (echo "missing REVISION var" | tee /dev/stderr) && exit 1
 
-echo "$PRIVATE_KEY" > /root/.ssh/codefresh
-chmod 700 ~/.ssh/
-chmod 600 ~/.ssh/*
+if [ -n "$PRIVATE_KEY" ]; then
+    echo "$PRIVATE_KEY" > /root/.ssh/codefresh
+    chmod 700 ~/.ssh/
+    chmod 600 ~/.ssh/*
+
+    # git@github.com:username/repo.git
+    # match "github.com" from ssh uri
+    echo "REPO $REPO"
+    SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
+    echo "SSH_HOST $SSH_HOST"
+    
+    ssh-keygen -R $SSH_HOST
+    ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+fi
 
 mkdir -p "$WORKING_DIRECTORY"
 cd $WORKING_DIRECTORY
