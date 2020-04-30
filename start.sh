@@ -31,24 +31,36 @@ git_retry () {
    )
 }
 
+suppress_stderr() {
+    $@ 2>/dev/null
+}
+
 trap exit_trap EXIT
 set -e
 
 [ -z "$REVISION" ] && (echo "missing REVISION var" | tee /dev/stderr) && exit 1
 
+# Condition should be based on $REPO url format, not $PRIVATE_KEY. Need to fix regex.
+# SSH_CLONE=""
+
+# echo "$REPO" | grep -Eq "^git.*?@.*?:(?:.*?\/)?.*?\/.*?\.git$" && SSH_CLONE=true
+# if [ -n $SSH_CLONE ]
 if [ -n "$PRIVATE_KEY" ]; then
+    echo "Cloning using SSH: $REPO"
+
+    [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
+
     echo "$PRIVATE_KEY" > /root/.ssh/codefresh
     chmod 700 ~/.ssh/
     chmod 600 ~/.ssh/*
 
     # git@github.com:username/repo.git
     # match "github.com" from ssh uri
-    echo "REPO $REPO"
     SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
-    echo "SSH_HOST $SSH_HOST"
     
-    ssh-keygen -R $SSH_HOST
-    ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+    echo "Adding "$SSH_HOST" to known_hosts"
+    suppress_stderr ssh-keygen -R $SSH_HOST
+    suppress_stderr ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
 fi
 
 mkdir -p "$WORKING_DIRECTORY"
