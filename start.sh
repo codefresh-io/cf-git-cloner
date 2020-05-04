@@ -40,12 +40,8 @@ set -e
 
 [ -z "$REVISION" ] && (echo "missing REVISION var" | tee /dev/stderr) && exit 1
 
-# Condition should be based on $REPO url format, not $PRIVATE_KEY. Need to fix regex.
-# SSH_CLONE=""
 
-# echo "$REPO" | grep -Eq "^git.*?@.*?:(?:.*?\/)?.*?\/.*?\.git$" && SSH_CLONE=true
-# if [ -n $SSH_CLONE ]
-if [ -n "$PRIVATE_KEY" ]; then
+if [ "$USE_SSH" = "true" ]; then
     echo "Cloning using SSH: $REPO"
 
     [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
@@ -54,8 +50,9 @@ if [ -n "$PRIVATE_KEY" ]; then
     chmod 700 ~/.ssh/
     chmod 600 ~/.ssh/*
 
-    # git@github.com:username/repo.git
+    # ssh://git@github.com:username/repo.git
     # match "github.com" from ssh uri
+    REPO=${REPO#"ssh://"}
     SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
     
     echo "Adding "$SSH_HOST" to known_hosts"
