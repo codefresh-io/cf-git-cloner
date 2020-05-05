@@ -38,6 +38,8 @@ suppress_stderr() {
 trap exit_trap EXIT
 set -e
 
+echo "Using update cf-git-cloner"
+
 [ -z "$REVISION" ] && (echo "missing REVISION var" | tee /dev/stderr) && exit 1
 
 
