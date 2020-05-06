@@ -31,10 +31,6 @@ git_retry () {
    )
 }
 
-suppress_stderr() {
-    $@ 2>/dev/null
-}
-
 trap exit_trap EXIT
 set -e
 
@@ -57,8 +53,8 @@ if [ "$USE_SSH" = "true" ]; then
     SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
     
     echo "Adding "$SSH_HOST" to known_hosts"
-    suppress_stderr ssh-keygen -R $SSH_HOST
-    suppress_stderr ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+    ssh-keygen -R $SSH_HOST
+    ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
 fi
 
 mkdir -p "$WORKING_DIRECTORY"
