@@ -53,8 +53,11 @@ if [ "$USE_SSH" = "true" ]; then
     SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
     
     echo "Adding "$SSH_HOST" to known_hosts"
-    ssh-keygen -R $SSH_HOST
-    ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+
+    # removes all keys belonging to hostname from a known_hosts file
+    ssh-keygen -R $SSH_HOST 2>/dev/null
+    # skip stderr logs that start with '#'
+    ssh-keyscan -H $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
 fi
 
 mkdir -p "$WORKING_DIRECTORY"
