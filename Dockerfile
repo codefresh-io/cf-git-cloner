@@ -4,9 +4,9 @@ RUN apk add --no-cache git~=2.22 bash openssh
 
 # install git-lfs
 RUN apk add --no-cache --virtual deps openssl && \
-    wget -qO- https://github.com/git-lfs/git-lfs/releases/download/v2.3.4/git-lfs-linux-amd64-2.3.4.tar.gz | tar xz && \
-    mv git-lfs-*/git-lfs /usr/bin/ && \
-    rm -rf git-lfs-* && \
+    export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd64") && \
+    wget -qO- https://github.com/git-lfs/git-lfs/releases/download/v2.12.1/git-lfs-linux-${ARCH}-v2.12.1.tar.gz | tar xz && \
+    mv git-lfs /usr/bin/ && \
     git lfs install && \
     apk del deps
 
