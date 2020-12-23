@@ -51,7 +51,7 @@ if [ "$USE_SSH" = "true" ]; then
     # match "github.com" from ssh uri
     REPO=${REPO#"ssh://"}
     SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
-    
+
     echo "Adding "$SSH_HOST" to known_hosts"
 
     # removes all keys belonging to hostname from a known_hosts file
@@ -66,6 +66,15 @@ cd $WORKING_DIRECTORY
 git config --global advice.detachedhead false
 git config --global credential.helper "/bin/sh -c 'echo username=$USERNAME; echo password=$PASSWORD'"
 
+if [ -n "$HTTP_PROXY" ]; then
+    git config --global http.proxy "$HTTP_PROXY"
+else
+    if [ -n "$HTTPS_PROXY" ]; then
+        git config --global http.proxy "$HTTPS_PROXY"
+    fi
+fi
+
+
 if [ -n "$SPARE_CHECKOUT" ]; then
     echo "spare checkout"
     if [ -d "$CLONE_DIR" ]; then
@@ -76,11 +85,11 @@ if [ -n "$SPARE_CHECKOUT" ]; then
       chmod -R 774 $CLONE_DIR
       cd $CLONE_DIR
       git remote add origin $REPO
-      git config core.sparsecheckout true 
-      echo "$SOURCE/*" >> .git/info/sparse-checkout 
+      git config core.sparsecheckout true
+      echo "$SOURCE/*" >> .git/info/sparse-checkout
     fi
-    
-    git pull --depth=1 origin $REVISION 
+
+    git pull --depth=1 origin $REVISION
     exit 0
  fi
 
