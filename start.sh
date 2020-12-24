@@ -66,6 +66,9 @@ cd $WORKING_DIRECTORY
 git config --global advice.detachedhead false
 git config --global credential.helper "/bin/sh -c 'echo username=$USERNAME; echo password=$PASSWORD'"
 
+set +e
+git config --global --unset http.proxy
+set -e
 if [ "$USE_PROXY" = "true" ]; then
     if [ -n "$HTTP_PROXY" ]; then
         echo "Using HTTP_PROXY"
