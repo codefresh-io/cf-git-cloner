@@ -67,9 +67,11 @@ git config --global advice.detachedhead false
 git config --global credential.helper "/bin/sh -c 'echo username=$USERNAME; echo password=$PASSWORD'"
 
 if [ -n "$HTTP_PROXY" ]; then
+    echo "Using HTTP_PROXY"
     git config --global http.proxy "$HTTP_PROXY"
 else
     if [ -n "$HTTPS_PROXY" ]; then
+        echo "Using HTTPS_PROXY"
         git config --global http.proxy "$HTTPS_PROXY"
     fi
 fi
