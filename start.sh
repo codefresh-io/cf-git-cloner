@@ -69,15 +69,13 @@ git config --global credential.helper "/bin/sh -c 'echo username=$USERNAME; echo
 set +e
 git config --global --unset http.proxy
 set -e
-if [ "$USE_PROXY" = "true" ]; then
-    if [ -n "$HTTP_PROXY" ]; then
-        echo "Using HTTP_PROXY"
-        git config --global http.proxy "$HTTP_PROXY"
-    else
-        if [ -n "$HTTPS_PROXY" ]; then
-            echo "Using HTTPS_PROXY"
-            git config --global http.proxy "$HTTPS_PROXY"
-        fi
+if [ -n "$HTTP_PROXY" ]; then
+    echo "Using HTTP_PROXY"
+    git config --global http.proxy "$HTTP_PROXY"
+else
+    if [ -n "$HTTPS_PROXY" ]; then
+        echo "Using HTTPS_PROXY"
+        git config --global http.proxy "$HTTPS_PROXY"
     fi
 fi
 
