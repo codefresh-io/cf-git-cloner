@@ -8,7 +8,7 @@ RUN $url = 'https://cygwin.com/setup-x86_64.exe'; \
 	\
 	Write-Host 'Installing ...'; \
 	New-Item -ItemType directory -Path 'C:/tmp'; \
-	Start-Process "C:/setup-x86_64.exe" -NoNewWindow -Wait -PassThru -ArgumentList @('-q','-v','-n','-B','-R','C:/cygwin64','-l','C:/tmp','-s','https://mirrors.sonic.net/cygwin/','-P','default,git,openssl'); \
+	Start-Process "C:/setup-x86_64.exe" -NoNewWindow -Wait -PassThru -ArgumentList @('-q','-v','-n','-B','-R','C:/cygwin64','-l','C:/tmp','-s','http://ctm.crouchingtigerhiddenfruitbat.org/pub/cygwin/circa/64bit/2019/03/06/161558','-X','-P','default,git,openssl'); \
 	\
 	Write-Host 'Removing ...'; \
 	Remove-Item -Path 'C:/tmp' -Force -Recurse -ErrorAction Ignore; \
