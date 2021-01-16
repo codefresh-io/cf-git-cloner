@@ -1,4 +1,6 @@
-FROM mcr.microsoft.com/windows/servercore:1909
+ARG OS_RELEASE
+
+FROM mcr.microsoft.com/windows/servercore:${OS_RELEASE}
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop';"]
 
