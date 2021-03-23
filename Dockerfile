@@ -11,8 +11,12 @@ RUN apk add --no-cache --virtual deps openssl && \
     git lfs install && \
     apk del deps
 
-#add ssh record on which ssh key to use
+# add ssh record on which ssh key to use
 COPY ./.ssh/ /root/.ssh/
+
+# add fingerprint for major git providers
+RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+RUN ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
 
 COPY ./start.sh /run/start.sh
 RUN chmod +x /run/start.sh
