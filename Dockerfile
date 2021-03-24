@@ -1,4 +1,3 @@
-#test
 FROM alpine:3.12.4
 
 RUN apk add --no-cache git bash openssh
