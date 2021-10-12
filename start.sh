@@ -109,7 +109,6 @@ if [ -d "$CLONE_DIR" ]; then
   if git status &> /dev/null ; then
       # Reset the remote URL because the embedded user token may have changed
       git remote set-url origin $REPO
-      git remote set-head origin --auto
 
       echo "Cleaning up the working directory"
       git reset -q --hard
@@ -120,6 +119,7 @@ if [ -d "$CLONE_DIR" ]; then
 
       echo "Fetching the updates from origin"
       git_retry git fetch --tags
+      git remote set-head origin --auto
 
       if [ -n "$REVISION" ]; then
 
