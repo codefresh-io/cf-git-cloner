@@ -122,17 +122,8 @@ if [ -d "$CLONE_DIR" ]; then
       git remote set-head origin --auto
 
       if [ -n "$REVISION" ]; then
-
           echo "Updating repository to revision $REVISION"
           git checkout $REVISION
-
-          CURRENT_BRANCH="`git branch 2>/dev/null | grep '^*' | cut -d' ' -f2-`"
-
-          # If the revision is identical to the current branch we can rebase it with the latest changes. This isn't needed when running detached
-          if [ "$REVISION" == "$CURRENT_BRANCH" ]; then
-             echo 'Rebasing current branch $REVISION to latest changes...'
-             git rebase
-          fi
       fi
   else
       # The folder already exists but it is not a git repository
