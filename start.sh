@@ -128,10 +128,10 @@ if [ -d "$CLONE_DIR" ]; then
 
           CURRENT_BRANCH="`git branch 2>/dev/null | grep '^*' | cut -d' ' -f2-`"
 
-          # If the revision is identical to the current branch we can rebase it with the latest changes. This isn't needed when running detached
-          if [ "$REVISION" == "$CURRENT_BRANCH" ]; then
-             echo 'Rebasing current branch $REVISION to latest changes...'
-             git rebase
+         # If the revision is identical to the current branch we can just reset it to the latest changes. This isn't needed when running detached
+         if [ "$REVISION" == "$CURRENT_BRANCH" ]; then
+            echo 'Resetting current branch $REVISION to latest changes...'
+            git reset --hard origin/$REVISION
           fi
       fi
   else
