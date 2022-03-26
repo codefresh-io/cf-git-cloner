@@ -1,4 +1,4 @@
-FROM alpine:3.14.4
+FROM alpine:latest
 
 RUN apk add --no-cache git=~2.32.0 bash openssh
 
