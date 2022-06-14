@@ -1,6 +1,6 @@
 FROM alpine:3.15.1
 
-RUN apk add --no-cache git=~2.34.1 bash openssh
+RUN apk add --no-cache git=~2.34.2 bash openssh
 
 # install git-lfs
 RUN apk add --no-cache --virtual deps openssl && \
