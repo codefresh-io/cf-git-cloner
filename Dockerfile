@@ -20,4 +20,9 @@ RUN ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
 COPY ./start.sh /run/start.sh
 RUN chmod +x /run/start.sh
 
+#add non-root user
+RUN addgroup -g 1000 nodegroup \
+    && adduser -u 1000 -G nodegroup -s /bin/sh -D nodeuser 
+USER nodeuser
+
 CMD ["/run/start.sh"]
