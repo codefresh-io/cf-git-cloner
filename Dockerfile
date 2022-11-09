@@ -1,6 +1,6 @@
-FROM alpine:3.15.4
+FROM alpine:3.15.6
 
-RUN apk add --no-cache git=~2.34.2 bash openssh
+RUN apk add --no-cache git=~2.34.4 bash openssh
 
 # install git-lfs
 RUN apk add --no-cache --virtual deps openssl && \
@@ -19,5 +19,10 @@ RUN ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
 
 COPY ./start.sh /run/start.sh
 RUN chmod +x /run/start.sh
+
+#add non-root user
+RUN addgroup -g 1000 nodegroup \
+    && adduser -u 1000 -G nodegroup -s /bin/sh -D nodeuser 
+USER nodeuser
 
 CMD ["/run/start.sh"]
