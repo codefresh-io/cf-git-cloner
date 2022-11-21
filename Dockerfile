@@ -3,8 +3,9 @@ FROM ubuntu:jammy-20221101
 RUN apt-get update -y && apt-get install git bash openssl    -y
 
 RUN apt-get  install    git-lfs && \ 
- git lfs install
+ git lfs install 
 
+RUN apt-get update -y && apt-get install busybox -y && ln -s /bin/busybox /usr/bin/[[
 # add ssh record on which ssh key to use
 COPY ./.ssh/ /root/.ssh/
 
