@@ -1,3 +1,4 @@
+#moving to ubuntu instead of debian to solve high vulnerabilities 
 FROM ubuntu:jammy-20221101
 
 RUN apt-get update -y && apt-get install git bash openssl    -y
