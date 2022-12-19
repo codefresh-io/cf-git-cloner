@@ -1,15 +1,12 @@
-FROM alpine:3.15.6
+#moving to ubuntu instead of debian to solve high vulnerabilities 
+FROM ubuntu:jammy-20221101
 
-RUN apk add --no-cache git=~2.34.4 bash openssh
+RUN apt-get update -y && apt-get install git bash openssl    -y
 
-# install git-lfs
-RUN apk add --no-cache --virtual deps openssl && \
-    export ARCH=$([[ "$(uname -m)" == "aarch64" ]] && echo "arm64" || echo "amd64") && \
-    wget -qO- https://github.com/git-lfs/git-lfs/releases/download/v2.12.1/git-lfs-linux-${ARCH}-v2.12.1.tar.gz | tar xz && \
-    mv git-lfs /usr/bin/ && \
-    git lfs install && \
-    apk del deps
+RUN apt-get  install    git-lfs && \ 
+ git lfs install 
 
+RUN apt-get update -y && apt-get install busybox -y && ln -s /bin/busybox /usr/bin/[[
 # add ssh record on which ssh key to use
 COPY ./.ssh/ /root/.ssh/
 
@@ -20,9 +17,9 @@ RUN ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
 COPY ./start.sh /run/start.sh
 RUN chmod +x /run/start.sh
 
-#add non-root user
-RUN addgroup -g 1000 nodegroup \
-    && adduser -u 1000 -G nodegroup -s /bin/sh -D nodeuser 
+# USER nodeuser
+RUN addgroup --gid 3000 nodegroup && \
+    adduser --uid 3000 --ingroup nodegroup --shell /bin/sh --disabled-password nodeuser
 USER nodeuser
 
 CMD ["/run/start.sh"]
