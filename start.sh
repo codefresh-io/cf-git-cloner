@@ -31,6 +31,17 @@ git_retry () {
    )
 }
 
+set_remote_alias () {
+  remoteAlias=$1
+  repo=$2
+  isOriginAliasExisted=$(git remote -v | awk '$1 ~ /^'$remoteAlias'$/{print $1; exit}')
+  if [[ $isOriginAliasExisted == $remoteAlias ]]; then
+    git remote set-url $remoteAlias $repo
+  else
+    git remote add $remoteAlias $repo
+  fi
+}
+
 trap exit_trap EXIT
 set -e
 
@@ -108,7 +119,7 @@ if [ -d "$CLONE_DIR" ]; then
   # Make sure the CLONE_DIR folder is a git folder
   if git status &> /dev/null ; then
       # Reset the remote URL because the embedded user token may have changed
-      git remote set-url origin $REPO
+      set_remote_alias origin $REPO
 
       echo "Cleaning up the working directory"
       git reset -q --hard
