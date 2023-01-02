@@ -2,9 +2,24 @@
 
 exit_trap () {
   local lc="$BASH_COMMAND" rc=$?
-  if [ $rc != 0 ]; then
-    echo "Command [$lc] exited with code [$rc]"
+  if [ "$rc" = 0 ] || [ "$WAS_EXECUTED_ALREADY" = "true" ]; then
+    return
   fi
+  if [ "$IS_LOCK_FILES_CHECK" = "true" ]; then
+    final_fallback
+  fi
+
+  if [ "$?" = "0" ] && [ "$IS_LOCK_FILES_CHECK" = "true" ]; then
+    exit 0
+  fi
+  echo "Command [$lc] exited with code [$rc]"
+}
+
+final_fallback () {
+  cd ../
+  rm -rf $WORKING_DIRECTORY
+  export WAS_EXECUTED_ALREADY=true
+  ./start.sh
 }
 
 git_retry () {
@@ -42,9 +57,17 @@ set_remote_alias () {
   fi
 }
 
-trap exit_trap EXIT
-set -e
+delete_process_lock_files () {
+  find ./.git -type f -iname '*.lock' -delete
+}
 
+SCRIPT_NAME=$0
+
+trap exit_trap EXIT
+
+if [ $IS_LOCK_FILES_CHECK = false ]; then
+  set -e
+fi
 
 [ -z "$REVISION" ] && (echo "missing REVISION var" | tee /dev/stderr) && exit 1
 
@@ -119,6 +142,9 @@ if [ -d "$CLONE_DIR" ]; then
   # Make sure the CLONE_DIR folder is a git folder
   if git status &> /dev/null ; then
       # Reset the remote URL because the embedded user token may have changed
+      if [ "$IS_LOCK_FILES_CHECK" = "true" ]; then
+        delete_process_lock_files
+      fi
       set_remote_alias origin $REPO
 
       echo "Cleaning up the working directory"
