@@ -65,7 +65,7 @@ SCRIPT_NAME=$0
 
 trap exit_trap EXIT
 
-if [ $IS_LOCK_FILES_CHECK = false ]; then
+if [ "$IS_LOCK_FILES_CHECK" = "false" ]; then
   set -e
 fi
 
