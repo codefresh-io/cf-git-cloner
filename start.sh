@@ -97,9 +97,6 @@ fi
 mkdir -p "$WORKING_DIRECTORY"
 cd $WORKING_DIRECTORY
 
-IS_LOCK_FILES_CHECK=true
-echo IS_LOCK_FILES_CHECK=$IS_LOCK_FILES_CHECK
-
 git config --global advice.detachedhead false
 git config --global credential.helper "/bin/sh -c 'echo username=$USERNAME; echo password=$PASSWORD'"
 
