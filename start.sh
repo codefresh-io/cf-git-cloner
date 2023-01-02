@@ -19,7 +19,7 @@ final_fallback () {
   cd ../
   rm -rf $WORKING_DIRECTORY
   export WAS_EXECUTED_ALREADY=true
-  ./start.sh
+  ./$0
 }
 
 git_retry () {
