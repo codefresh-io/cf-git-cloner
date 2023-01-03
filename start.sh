@@ -139,7 +139,11 @@ if [ -d "$CLONE_DIR" ]; then
       # Clean folder and clone a fresh copy on current directory
       cd ..
       rm -rf $CLONE_DIR
-      git_retry git clone $REPO $CLONE_DIR
+      if [ -n "$DEPTH" ]; then
+        git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH
+      else
+        git_retry git clone $REPO $CLONE_DIR
+      fi
       cd $CLONE_DIR
 
       if [ -n "$REVISION" ]; then
@@ -149,17 +153,15 @@ if [ -d "$CLONE_DIR" ]; then
 else
 
  # Clone a fresh copy
-  git_retry git clone $REPO $CLONE_DIR
-  echo 'eti testmnmkk'
-  cd $CLONE_DIR
+   if [ -n "$DEPTH" ]; then
+       git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH
+   else
+     git_retry git clone $REPO $CLONE_DIR
+   fi
 
+  cd $CLONE_DIR
   if [ -n "$REVISION" ]; then
-      echo 'eti test2'
     git checkout $REVISION
   fi
-
-    if [ -n "$DEPTH" ]; then
-        echo 'eti test3'
-    fi
 
 fi
