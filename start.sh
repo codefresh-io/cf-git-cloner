@@ -150,7 +150,7 @@ else
 
  # Clone a fresh copy
   git_retry git clone $REPO $CLONE_DIR
-  echo 'eti test'
+  echo 'eti testmnmkk'
   cd $CLONE_DIR
 
   if [ -n "$REVISION" ]; then
