@@ -2,11 +2,11 @@
 
 exit_trap () {
   local lc="$BASH_COMMAND" rc=$?
-  if [ "$rc" = 0 ] || [ "$WAS_EXECUTED_ALREADY" = "true" ]; then
+  if [ "$rc" = 0 ] || [ "$IS_RETRY" = "true" ]; then
     return
   fi
   if [ "$IS_LOCK_FILES_CHECK" = "true" ]; then
-    final_fallback
+    retry_script
   fi
 
   if [ "$?" = "0" ] && [ "$IS_LOCK_FILES_CHECK" = "true" ]; then
@@ -15,11 +15,12 @@ exit_trap () {
   echo "Command [$lc] exited with code [$rc]"
 }
 
-final_fallback () {
+retry_script () {
+  echo "Retrying git clone operation..."
   cd ../
-  rm -rf $WORKING_DIRECTORY
-  export WAS_EXECUTED_ALREADY=true
-  ./$0
+  rm -rf $CLONE_DIR
+  export IS_RETRY=true
+  ./$0 $@
 }
 
 git_retry () {
@@ -46,7 +47,7 @@ git_retry () {
    )
 }
 
-set_remote_alias () {
+upsert_remote_alias () {
   remoteAlias=$1
   repo=$2
   isOriginAliasExisted=$(git remote -v | awk '$1 ~ /^'$remoteAlias'$/{print $1; exit}')
@@ -60,8 +61,6 @@ set_remote_alias () {
 delete_process_lock_files () {
   find ./.git -type f -iname '*.lock' -delete
 }
-
-SCRIPT_NAME=$0
 
 trap exit_trap EXIT
 set -e
@@ -142,7 +141,7 @@ if [ -d "$CLONE_DIR" ]; then
       if [ "$IS_LOCK_FILES_CHECK" = "true" ]; then
         delete_process_lock_files
       fi
-      set_remote_alias origin $REPO
+      upsert_remote_alias origin $REPO
 
       echo "Cleaning up the working directory"
       git reset -q --hard
