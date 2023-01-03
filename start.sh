@@ -154,7 +154,7 @@ else
 
  # Clone a fresh copy
    if [ -n "$DEPTH" ]; then
-       git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH
+      git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH
    else
      git_retry git clone $REPO $CLONE_DIR
    fi
