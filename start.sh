@@ -2,15 +2,12 @@
 
 exit_trap () {
   local lc="$BASH_COMMAND" rc=$?
-  if [ "$rc" = 0 ] || [ "$IS_RETRY" = "true" ]; then
+  if [ "$rc" = 0 ]; then
     return
   fi
-  if [ "$IS_LOCK_FILES_CHECK" = "true" ]; then
+  if [ "$CLEAN_GIT_LOCK_FILES" = "true" ] && [ "$IS_RETRY" != "true" ]; then
     retry_script
-  fi
-
-  if [ "$?" = "0" ] && [ "$IS_LOCK_FILES_CHECK" = "true" ]; then
-    exit 0
+    exit $?
   fi
   echo "Command [$lc] exited with code [$rc]"
 }
@@ -49,12 +46,12 @@ git_retry () {
 
 upsert_remote_alias () {
   remoteAlias=$1
-  repo=$2
+  remoteUrl=$2
   isOriginAliasExisted=$(git remote -v | awk '$1 ~ /^'$remoteAlias'$/{print $1; exit}')
-  if [[ $isOriginAliasExisted == $remoteAlias ]]; then
-    git remote set-url $remoteAlias $repo
+  if [ "$isOriginAliasExisted" = "$remoteAlias" ]; then
+    git remote set-url $remoteAlias $remoteUrl
   else
-    git remote add $remoteAlias $repo
+    git remote add $remoteAlias $remoteUrl
   fi
 }
 
@@ -137,10 +134,10 @@ if [ -d "$CLONE_DIR" ]; then
 
   # Make sure the CLONE_DIR folder is a git folder
   if git status &> /dev/null ; then
-      # Reset the remote URL because the embedded user token may have changed
-      if [ "$IS_LOCK_FILES_CHECK" = "true" ]; then
+      if [ "$CLEAN_GIT_LOCK_FILES" = "true" ]; then
         delete_process_lock_files
       fi
+      # Reset the remote URL because the embedded user token may have changed
       upsert_remote_alias origin $REPO
 
       echo "Cleaning up the working directory"
