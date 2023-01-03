@@ -64,7 +64,6 @@ delete_process_lock_files () {
 SCRIPT_NAME=$0
 
 trap exit_trap EXIT
-
 set -e
 
 [ -z "$REVISION" ] && (echo "missing REVISION var" | tee /dev/stderr) && exit 1
