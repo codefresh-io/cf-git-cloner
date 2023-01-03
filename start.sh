@@ -154,7 +154,12 @@ else
   cd $CLONE_DIR
 
   if [ -n "$REVISION" ]; then
+      echo 'eti test2'
     git checkout $REVISION
   fi
+
+    if [ -n "$DEPTH" ]; then
+        echo 'eti test3'
+    fi
 
 fi
