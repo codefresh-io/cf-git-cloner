@@ -17,7 +17,7 @@ retry_script () {
   cd ../
   rm -rf $CLONE_DIR
   export IS_RETRY=true
-  ./$0 $@
+  $0 $@
 }
 
 git_retry () {
@@ -56,7 +56,12 @@ upsert_remote_alias () {
 }
 
 delete_process_lock_files () {
-  find ./.git -type f -iname '*.lock' -delete
+  ARE_PROCEE_LOCK_FILES=$(find ./.git -type f -iname '*.lock')
+  if [ -n "$ARE_PROCEE_LOCK_FILES" ]; then
+    echo Deleting process lock files:
+    echo $ARE_PROCEE_LOCK_FILES
+    find ./.git -type f -iname '*.lock' -delete
+  fi
 }
 
 trap exit_trap EXIT
