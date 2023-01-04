@@ -17,7 +17,7 @@ retry_script () {
   cd ../
   rm -rf $CLONE_DIR
   export IS_RETRY=true
-  ./$0 $@
+  .$0 $@
 }
 
 git_retry () {
