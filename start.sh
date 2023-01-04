@@ -99,9 +99,9 @@ if [ -n "$SPARE_CHECKOUT" ]; then
  fi
 
 if [ -n "$DEPTH" ]; then
-  GIT_COMMAND=git clone $REPO $CLONE_DIR --depth=$DEPTH
+  GIT_COMMAND="git clone $REPO $CLONE_DIR --depth=$DEPTH"
 else
-  GIT_COMMAND=git clone $REPO $CLONE_DIR
+  GIT_COMMAND="git clone $REPO $CLONE_DIR"
 fi
 
 # Check if the cloned dir already exists from previous builds
