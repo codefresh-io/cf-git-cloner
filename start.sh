@@ -99,8 +99,10 @@ if [ -n "$SPARE_CHECKOUT" ]; then
  fi
 
 if [ -n "$DEPTH" ]; then
+  echo "Using DEPTH $DEPTH"
   GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH"
 else
+  echo "no DEPTH"
   GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR"
 fi
 
