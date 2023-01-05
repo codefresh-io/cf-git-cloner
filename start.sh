@@ -130,6 +130,12 @@ if [ -n "$SPARE_CHECKOUT" ]; then
     exit 0
  fi
 
+if [ -n "$DEPTH" ]; then
+  GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH"
+else
+  GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR"
+fi
+
 # Check if the cloned dir already exists from previous builds
 if [ -d "$CLONE_DIR" ]; then
 
@@ -174,7 +180,7 @@ if [ -d "$CLONE_DIR" ]; then
       # Clean folder and clone a fresh copy on current directory
       cd ..
       rm -rf $CLONE_DIR
-      git_retry git clone $REPO $CLONE_DIR
+      eval $GIT_COMMAND
       cd $CLONE_DIR
 
       if [ -n "$REVISION" ]; then
@@ -184,9 +190,8 @@ if [ -d "$CLONE_DIR" ]; then
 else
 
  # Clone a fresh copy
-  git_retry git clone $REPO $CLONE_DIR
+  eval $GIT_COMMAND
   cd $CLONE_DIR
-
   if [ -n "$REVISION" ]; then
     git checkout $REVISION
   fi
