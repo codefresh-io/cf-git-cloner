@@ -2,9 +2,22 @@
 
 exit_trap () {
   local lc="$BASH_COMMAND" rc=$?
-  if [ $rc != 0 ]; then
-    echo "Command [$lc] exited with code [$rc]"
+  if [ "$rc" = 0 ]; then
+    return
   fi
+  if [ "$CLEAN_GIT_LOCK_FILES" = "true" ] && [ "$IS_RETRY" != "true" ]; then
+    retry_script
+    exit $?
+  fi
+  echo "Command [$lc] exited with code [$rc]"
+}
+
+retry_script () {
+  echo "Retrying git clone operation..."
+  cd ../
+  rm -rf $CLONE_DIR
+  export IS_RETRY=true
+  $0 $@
 }
 
 git_retry () {
@@ -31,9 +44,28 @@ git_retry () {
    )
 }
 
+upsert_remote_alias () {
+  remoteAlias=$1
+  remoteUrl=$2
+  isOriginAliasExisted=$(git remote -v | awk '$1 ~ /^'$remoteAlias'$/{print $1; exit}')
+  if [ "$isOriginAliasExisted" = "$remoteAlias" ]; then
+    git remote set-url $remoteAlias $remoteUrl
+  else
+    git remote add $remoteAlias $remoteUrl
+  fi
+}
+
+delete_process_lock_files () {
+  ARE_PROCEE_LOCK_FILES=$(find ./.git -type f -iname '*.lock')
+  if [ -n "$ARE_PROCEE_LOCK_FILES" ]; then
+    echo Deleting process lock files:
+    echo $ARE_PROCEE_LOCK_FILES
+    find ./.git -type f -iname '*.lock' -delete
+  fi
+}
+
 trap exit_trap EXIT
 set -e
-
 
 [ -z "$REVISION" ] && (echo "missing REVISION var" | tee /dev/stderr) && exit 1
 
@@ -102,8 +134,8 @@ if [ -n "$DEPTH" ]; then
   echo "Using DEPTH $DEPTH"
   GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH"
 else
-    echo "no DEPTH"
-  GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR"
+  echo "no DEPTH"
+  GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH"
 fi
 
 # Check if the cloned dir already exists from previous builds
@@ -115,8 +147,11 @@ if [ -d "$CLONE_DIR" ]; then
 
   # Make sure the CLONE_DIR folder is a git folder
   if git status &> /dev/null ; then
+      if [ "$CLEAN_GIT_LOCK_FILES" = "true" ]; then
+        delete_process_lock_files
+      fi
       # Reset the remote URL because the embedded user token may have changed
-      git remote set-url origin $REPO
+      upsert_remote_alias origin $REPO
 
       echo "Cleaning up the working directory"
       git reset -q --hard
