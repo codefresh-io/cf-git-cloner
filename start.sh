@@ -135,7 +135,7 @@ if [ -n "$DEPTH" ]; then
   GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH"
 else
   echo "no DEPTH"
-  GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH"
+  GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR"
 fi
 
 # Check if the cloned dir already exists from previous builds
