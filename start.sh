@@ -64,6 +64,18 @@ delete_process_lock_files () {
   fi
 }
 
+git_checkout () {
+  revision="$REVISION"
+  # when revision is Gerrit branch we need to fetch it explicitly
+  if [[ "$REVISION" =~ ^refs/changes/[0-9]+/[0-9]+/[0-9]+$ ]]; then
+    echo "Fetching Gerrit Change ref: $REVISION"
+    git_retry git fetch origin $REVISION
+    revision="FETCH_HEAD"
+  fi
+
+  git checkout $revision
+}
+
 trap exit_trap EXIT
 set -e
 
@@ -165,7 +177,7 @@ if [ -d "$CLONE_DIR" ]; then
       if [ -n "$REVISION" ]; then
 
           echo "Updating repository to revision $REVISION"
-          git checkout $REVISION
+          git_checkout
 
           CURRENT_BRANCH="`git branch 2>/dev/null | grep '^*' | cut -d' ' -f2-`"
 
@@ -184,7 +196,7 @@ if [ -d "$CLONE_DIR" ]; then
       cd $CLONE_DIR
 
       if [ -n "$REVISION" ]; then
-        git checkout $REVISION
+        git_checkout
       fi
   fi
 else
@@ -193,7 +205,7 @@ else
   eval $GIT_COMMAND
   cd $CLONE_DIR
   if [ -n "$REVISION" ]; then
-    git checkout $REVISION
+    git_checkout
   fi
 
 fi
