@@ -1,10 +1,10 @@
 #moving to ubuntu instead of debian to solve high vulnerabilities 
-FROM ubuntu:jammy-20221101
+FROM ubuntu:jammy-20230425
 
-RUN apt-get update -y && apt-get install git bash openssl    -y
+RUN apt-get update -y && apt-get install git bash openssl -y
 
-RUN apt-get  install    git-lfs && \ 
- git lfs install 
+RUN apt-get install git-lfs && \
+ git lfs install
 
 RUN apt-get update -y && apt-get install busybox -y && ln -s /bin/busybox /usr/bin/[[
 # add ssh record on which ssh key to use
