@@ -196,6 +196,10 @@ if [ -d "$CLONE_DIR" ]; then
       cd $CLONE_DIR
 
       if [ -n "$REVISION" ]; then
+          if [ -n "$DEPTH" ]; then
+            git_retry git remote set-branches origin '*'
+            git_retry git fetch --depth=$DEPTH
+          fi
         git_checkout
       fi
   fi
@@ -204,7 +208,12 @@ else
  # Clone a fresh copy
   eval $GIT_COMMAND
   cd $CLONE_DIR
+
   if [ -n "$REVISION" ]; then
+      if [ -n "$DEPTH" ]; then
+        git_retry git remote set-branches origin '*'
+        git_retry git fetch --depth=$DEPTH
+      fi
     git_checkout
   fi
 
