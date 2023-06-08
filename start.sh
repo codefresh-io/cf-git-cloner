@@ -194,7 +194,7 @@ if [ -d "$CLONE_DIR" ]; then
       rm -rf $CLONE_DIR
       eval $GIT_COMMAND
       cd $CLONE_DIR
-      echo 'cloned successfully'
+      echo "The folder already exists but it is not a git repository - cloned successfully into $CLONE_DIR"
       if [ -n "$REVISION" ]; then
           if [ -n "$DEPTH" ]; then
             echo 'git remote set-branches origin '*' - before'
@@ -212,13 +212,13 @@ else
  # Clone a fresh copy
   eval $GIT_COMMAND
   cd $CLONE_DIR
-  echo 'cloned successfully'
+  echo "cloned successfully into $CLONE_DIR"
   if [ -n "$REVISION" ]; then
       if [ -n "$DEPTH" ]; then
         echo 'git remote set-branches origin '*' - before'
         git_retry git remote set-branches origin '*'
         echo 'git remote set-branches origin '*' - after'
-        echo 'git fetch --depth=$DEPTH'
+        echo "git fetch --depth=$DEPTH"
         git_retry git fetch --depth=$DEPTH
         echo 'git fetch --depth=$DEPTH - after'
       fi
