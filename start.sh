@@ -212,7 +212,7 @@ else
  # Clone a fresh copy
   eval $GIT_COMMAND
   cd $CLONE_DIR
-  echo "cloned successfully into $CLONE_DIR"
+  echo "cloned successfully into $CLONE_DIR, repo: $REPO, revision: $REVISION "
   if [ -n "$REVISION" ]; then
       if [ -n "$DEPTH" ]; then
         echo 'git remote set-branches origin '*' - before'
