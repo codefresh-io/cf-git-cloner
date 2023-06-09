@@ -219,7 +219,7 @@ else
         git_retry git remote set-branches origin '*'
         echo 'git remote set-branches origin '*' - after'
         echo "git fetch --depth=$DEPTH"
-        git_retry git fetch --depth=$DEPTH
+        git_retry git fetch --depth=1
         echo 'git fetch --depth=$DEPTH - after'
       fi
     git_checkout
