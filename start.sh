@@ -217,10 +217,10 @@ else
       if [ -n "$DEPTH" ]; then
         git remote prune origin
         git fetch origin --tags --prune "+refs/tags/*:refs/tags/*"
-        echo 'git remote set-branches origin '*' - before'
+        echo 'git remote set-branches origin "*" - before'
         cat .git/config
-        git_retry git remote set-branches origin '*'
-        echo 'git remote set-branches origin '*' - after'
+        git_retry git remote set-branches origin "*"
+        echo 'git remote set-branches origin "*" - after'
         cat .git/config
         echo "git fetch --depth=$DEPTH"
         git fetch --depth=1
