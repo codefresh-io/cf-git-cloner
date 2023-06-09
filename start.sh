@@ -215,8 +215,6 @@ else
   echo "cloned successfully into $CLONE_DIR, repo: $REPO, revision: $REVISION "
   if [ -n "$REVISION" ]; then
       if [ -n "$DEPTH" ]; then
-        git remote prune origin
-        git fetch origin --tags --prune "+refs/tags/*:refs/tags/*"
         echo 'git remote set-branches origin "*" - before'
         cat .git/config
         git_retry git remote set-branches origin "*"
