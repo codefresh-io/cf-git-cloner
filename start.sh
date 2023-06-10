@@ -215,12 +215,13 @@ else
   echo "cloned successfully into $CLONE_DIR"
   if [ -n "$REVISION" ]; then
       if [ -n "$DEPTH" ]; then
-        git remote set-branches origin '*'
+        git_retry git remote set-branches origin '*'
         cat .git/config
-        git remote set-branches origin "*"
+        git_retry git remote set-branches origin "*"
         cat .git/config
-
-        git fetch --depth=$DEPTH
+        eval "git_retry git remote set-branches origin '*'"
+        cat .git/config
+        git_retry git fetch --depth=$DEPTH
       fi
     git_checkout
   fi
