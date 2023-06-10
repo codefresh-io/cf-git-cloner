@@ -22,26 +22,26 @@ retry_script () {
 
 git_retry() {
     # Retry git on exit code 128
-    (
-        set +e
-        RETRY_ON_SIGNAL=128
-        COMMAND=("$@")  # Store the command and arguments as an array
-        local TRY_NUM=1 MAX_TRIES=4 RETRY_WAIT=5
-        until [[ "$TRY_NUM" -ge "$MAX_TRIES" ]]; do
-            "${COMMAND[@]}"  # Use "${COMMAND[@]}" to preserve arguments with quotes
-            EXIT_CODE=$?
-            if [[ $EXIT_CODE == 0 ]]; then
-                break
-            elif [[ $EXIT_CODE == "$RETRY_ON_SIGNAL" ]]; then
-                echo "Failed with Exit Code $EXIT_CODE - try $TRY_NUM"
-                TRY_NUM=$((TRY_NUM + 1))
-                sleep $RETRY_WAIT
-            else
-                break
-            fi
-        done
-        return $EXIT_CODE
-    )
+(
+    set +e
+    RETRY_ON_SIGNAL=128
+    COMMAND=("$@")  # Store the command and arguments as an array
+    local TRY_NUM=1 MAX_TRIES=4 RETRY_WAIT=5
+    until [[ "$TRY_NUM" -ge "$MAX_TRIES" ]]; do
+        "${COMMAND[@]}"  # Use "${COMMAND[@]}" to preserve arguments with quotes
+        EXIT_CODE=$?
+        if [[ $EXIT_CODE == 0 ]]; then
+            break
+        elif [[ $EXIT_CODE == "$RETRY_ON_SIGNAL" ]]; then
+            echo "Failed with Exit Code $EXIT_CODE - try $TRY_NUM"
+            TRY_NUM=$((TRY_NUM + 1))
+            sleep $RETRY_WAIT
+        else
+            break
+        fi
+    done
+    return $EXIT_CODE
+)
 }
 
 upsert_remote_alias () {
