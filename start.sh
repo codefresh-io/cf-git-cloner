@@ -21,7 +21,7 @@ retry_script () {
 }
 
 git_retry() {
-    # Retry git on exit code 128
+# Retry git on exit code 128
 (
     set +e
     RETRY_ON_SIGNAL=128
