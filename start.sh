@@ -197,7 +197,7 @@ if [ -d "$CLONE_DIR" ]; then
 
       if [ -n "$REVISION" ]; then
           if [ -n "$DEPTH" ]; then
-            git_retry git remote set-branches origin '*'
+            git_retry git remote set-branches origin "*"
             git_retry git fetch --depth=$DEPTH
           fi
         git_checkout
