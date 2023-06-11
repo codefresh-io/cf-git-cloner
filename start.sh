@@ -25,10 +25,10 @@ git_retry () {
 (
    set +e
    RETRY_ON_SIGNAL=128
-   COMMAND=$@
+   COMMAND=("$@")  # Store the command and arguments as an array
    local TRY_NUM=1 MAX_TRIES=4 RETRY_WAIT=5
    until [[ "$TRY_NUM" -ge "$MAX_TRIES" ]]; do
-      $COMMAND
+      "${COMMAND[@]}"  # Use "${COMMAND[@]}" to preserve arguments with quotes
       EXIT_CODE=$?
       if [[ $EXIT_CODE == 0 ]]; then
         break
@@ -196,6 +196,10 @@ if [ -d "$CLONE_DIR" ]; then
       cd $CLONE_DIR
 
       if [ -n "$REVISION" ]; then
+          if [ -n "$DEPTH" ]; then
+            git_retry git remote set-branches origin "*"
+            git_retry git fetch --depth=$DEPTH
+          fi
         git_checkout
       fi
   fi
@@ -205,6 +209,10 @@ else
   eval $GIT_COMMAND
   cd $CLONE_DIR
   if [ -n "$REVISION" ]; then
+      if [ -n "$DEPTH" ]; then
+        git_retry git remote set-branches origin "*"
+        git_retry git fetch --depth=$DEPTH
+      fi
     git_checkout
   fi
 
