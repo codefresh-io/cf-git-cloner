@@ -109,7 +109,7 @@ if [ "$USE_SSH" = "true" ]; then
     SSH_PORT_PARAM=
     SSH_PORT_LOG=''
     if [[ "$SSH_PORT" =~ ^[0-9]{1,5}$ ]]; then
-        SSH_PORT_PARAM="-p $SSH_PORT "
+        SSH_PORT_PARAM="-p $SSH_PORT"
         SSH_PORT_LOG=":$SSH_PORT"
     fi
 
