@@ -106,7 +106,7 @@ if [ "$USE_SSH" = "true" ]; then
     # we need to add port to ssh host in the known_hosts file
     # otherwise it will ask to add host to known_hosts
     # during git clone
-    SSH_PORT_PARAM=''
+    SSH_PORT_PARAM=
     SSH_PORT_LOG=''
     if [[ "$SSH_PORT" =~ ^[0-9]{1,5}$ ]]; then
         SSH_PORT_PARAM="-p $SSH_PORT "
@@ -122,7 +122,7 @@ if [ "$USE_SSH" = "true" ]; then
     # removes all keys belonging to hostname from a known_hosts file
     ssh-keygen -R $SSH_HOST 2>/dev/null
     # skip stderr logs that start with '#'
-    ssh-keyscan "$SSH_PORT_PARAM"-H $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
+    ssh-keyscan $SSH_PORT_PARAM -H $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
 fi
 
 mkdir -p "$WORKING_DIRECTORY"
