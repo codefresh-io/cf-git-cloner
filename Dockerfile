@@ -18,8 +18,11 @@ COPY ./start.sh /run/start.sh
 RUN chmod +x /run/start.sh
 
 # USER nodeuser
-RUN addgroup --gid 3000 nodegroup && \
-    adduser --uid 3000 --ingroup nodegroup --shell /bin/sh  --gecos ""  --disabled-password nodeuser
+RUN addgroup --gid 3000 nodegroup  \
+   && adduser --uid 3000 --ingroup nodegroup --shell /bin/sh  --gecos ""  --disabled-password nodeuser \
+   && chown -R $(id -g nodeuser) /root \
+   && chgrp -R $(id -g nodeuser) /root  \
+   && chmod -R g+rwX /root
 USER nodeuser
 
 CMD ["/run/start.sh"]
