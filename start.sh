@@ -93,7 +93,7 @@ if [ "$USE_SSH" = "true" ]; then
 
     # ssh://git@github.com:username/repo.git
     # match "github.com" from ssh uri
-    REPO=${REPO#"ssh://"}
+    SSH_REPO=${REPO#"ssh://"}
 
 
     # was: git@host:1234:username/repo.git
@@ -101,7 +101,7 @@ if [ "$USE_SSH" = "true" ]; then
     # or: git@host:username/repo.git
     # became: `1234` (will be accepted by check)
     # or: `username` (will be skipped by check)
-    SSH_PORT=$(echo "$REPO" | cut -d ":" -f 2 | cut -d "/" -f 1)
+    SSH_PORT=$(echo "$SSH_REPO" | cut -d ":" -f 2 | cut -d "/" -f 1)
 
     # we need to add port to ssh host in the known_hosts file
     # otherwise it will ask to add host to known_hosts
@@ -115,14 +115,14 @@ if [ "$USE_SSH" = "true" ]; then
 
     # was: git@github.com:username/repo.git
     # became: github.com
-    SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
+    SSH_HOST=$(echo "$SSH_REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
 
     echo "Adding "$SSH_HOST$SSH_PORT_LOG" to known_hosts"
 
     # removes all keys belonging to hostname from a known_hosts file
     ssh-keygen -R $SSH_HOST 2>/dev/null
     # skip stderr logs that start with '#'
-    ssh-keyscan $SSH_PORT_PARAM -H $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
+    ssh-keyscan $SSH_PORT_PARAM $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
 fi
 
 mkdir -p "$WORKING_DIRECTORY"
