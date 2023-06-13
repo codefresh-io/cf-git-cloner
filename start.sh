@@ -127,7 +127,7 @@ if [ "$USE_SSH" = "true" ]; then
     echo "Adding "$SSH_HOST$SSH_PORT_LOG" to known_hosts"
 
     # skip stderr logs that start with '#'
-    ssh-keyscan $SSH_PORT_PARAM $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
+    ssh-keyscan $SSH_PORT_PARAM -H $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
 fi
 
 mkdir -p "$WORKING_DIRECTORY"
