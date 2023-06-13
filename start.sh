@@ -87,7 +87,7 @@ if [ "$USE_SSH" = "true" ]; then
 
     [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
 
-    echo "$PRIVATE_KEY" > /root/.ssh/codefresh
+    echo "$PRIVATE_KEY" > ~/.ssh/codefresh
     chmod 700 ~/.ssh/
     chmod 600 ~/.ssh/*
 
