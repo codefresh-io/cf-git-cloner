@@ -8,7 +8,7 @@ RUN apt-get install git-lfs && \
 
 RUN apt-get update -y && apt-get install busybox -y && ln -s /bin/busybox /usr/bin/[[
 # add ssh record on which ssh key to use
-COPY ./.ssh/ /home/nodeuser/.ssh/
+#COPY ./.ssh/ /tmp/.ssh/
 
 # add fingerprint for major git providers
 #RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
@@ -19,7 +19,7 @@ RUN chmod +x /run/start.sh
 
 # USER nodeuser
 RUN addgroup --gid 3000 nodegroup \
-   && adduser --uid 3000 --ingroup nodegroup --shell /bin/sh  --gecos ""  --disabled-password nodeuser
+   && adduser --uid 3000 --home /home/nodeuser --ingroup nodegroup --shell /bin/sh  --gecos ""  --disabled-password nodeuser
 #   && chown -R $(id -g nodeuser) /root \
 #   && chgrp -R $(id -g nodeuser) /root \
 #   && chmod -R g+rwX /root
