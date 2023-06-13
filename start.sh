@@ -122,7 +122,7 @@ if [ "$USE_SSH" = "true" ]; then
     echo "Adding "$SSH_HOST$SSH_PORT_LOG" to known_hosts"
 
     # removes all keys belonging to hostname from a known_hosts file
-#    ssh-keygen -R $SSH_HOST 2>/dev/null
+    # ssh-keygen -R $SSH_HOST 2>/dev/null
     # skip stderr logs that start with '#'
     ssh-keyscan $SSH_PORT_PARAM $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
 fi
