@@ -19,7 +19,7 @@ RUN chmod +x /run/start.sh
 
 # USER nodeuser
 RUN addgroup --gid 3000 nodegroup && \
-    adduser --uid 3000 --ingroup nodegroup --shell /bin/sh  --gecos ""  --disabled-password nodeuser
+    adduser --uid 3000 --home /root --ingroup nodegroup --shell /bin/sh  --gecos ""  --disabled-password nodeuser
 USER nodeuser
 
 CMD ["/run/start.sh"]
