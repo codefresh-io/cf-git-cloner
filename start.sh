@@ -87,21 +87,47 @@ if [ "$USE_SSH" = "true" ]; then
 
     [ -z "$PRIVATE_KEY" ] && (echo "missing PRIVATE_KEY var" | tee /dev/stderr) && exit 1
 
-    echo "$PRIVATE_KEY" > /root/.ssh/codefresh
+    # it does not exist by default
+    mkdir -p ~/.ssh
+    # copy private key to a file
+    echo "$PRIVATE_KEY" > ~/.ssh/codefresh
+    # use this private key when using git with ssh
+    echo "IdentityFile ~/.ssh/codefresh" > ~/.ssh/config
+
+    # set correct permissions for ssh agent
     chmod 700 ~/.ssh/
     chmod 600 ~/.ssh/*
 
     # ssh://git@github.com:username/repo.git
     # match "github.com" from ssh uri
-    REPO=${REPO#"ssh://"}
-    SSH_HOST=$(echo "$REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
+    SSH_REPO=${REPO#"ssh://"}
 
-    echo "Adding "$SSH_HOST" to known_hosts"
 
-    # removes all keys belonging to hostname from a known_hosts file
-    ssh-keygen -R $SSH_HOST 2>/dev/null
+    # was: git@host:1234:username/repo.git
+    # or: git@host:1234/repo.git
+    # or: git@host:username/repo.git
+    # became: `1234` (will be accepted by check)
+    # or: `username` (will be skipped by check)
+    SSH_PORT=$(echo "$SSH_REPO" | cut -d ":" -f 2 | cut -d "/" -f 1)
+
+    # we need to add port to ssh host in the known_hosts file
+    # otherwise it will ask to add host to known_hosts
+    # during git clone
+    SSH_PORT_PARAM=
+    SSH_PORT_LOG=''
+    if [[ "$SSH_PORT" =~ ^[0-9]{1,5}$ ]]; then
+        SSH_PORT_PARAM="-p $SSH_PORT"
+        SSH_PORT_LOG=":$SSH_PORT"
+    fi
+
+    # was: git@github.com:username/repo.git
+    # became: github.com
+    SSH_HOST=$(echo "$SSH_REPO" | cut -d ":" -f 1 | cut -d "@" -f 2)
+
+    echo "Adding "$SSH_HOST$SSH_PORT_LOG" to known_hosts"
+
     # skip stderr logs that start with '#'
-    ssh-keyscan -H $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
+    ssh-keyscan $SSH_PORT_PARAM -H $SSH_HOST > ~/.ssh/known_hosts 2> >(grep -v '^#' >&2)
 fi
 
 mkdir -p "$WORKING_DIRECTORY"
