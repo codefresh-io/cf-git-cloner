@@ -1,5 +1,5 @@
 #moving to ubuntu instead of debian to solve high vulnerabilities 
-FROM ubuntu:jammy
+FROM ubuntu:jammy-20230804
 
 RUN apt-get update && \
   apt-get install -y curl bash openssl  && \
