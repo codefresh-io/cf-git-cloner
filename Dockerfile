@@ -1,10 +1,13 @@
 #moving to ubuntu instead of debian to solve high vulnerabilities 
-FROM ubuntu:jammy-20230425
+FROM ubuntu:jammy
 
-RUN apt-get update -y && apt-get install git bash openssl -y
+RUN apt-get update && \
+  apt-get install -y curl bash openssl  && \
+  apt-get clean
 
-RUN apt-get install git-lfs && \
- git lfs install
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
+  apt-get install -y git-lfs=3.4.0 && \
+  apt-get clean
 
 RUN apt-get update -y && apt-get install busybox -y && ln -s /bin/busybox /usr/bin/[[
 
