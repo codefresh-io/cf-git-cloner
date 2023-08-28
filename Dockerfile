@@ -6,10 +6,10 @@ RUN apt-get update && \
   apt-get clean
 
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
-  apt-get install -y git-lfs=3.4.0 && \
+  apt-get install -y git-lfs=3.4.0 busybox && \
   apt-get clean
 
-RUN apt-get update -y && apt-get install busybox -y && ln -s /bin/busybox /usr/bin/[[
+RUN ln -s /bin/busybox /usr/bin/[[
 
 COPY ./start.sh /run/start.sh
 RUN chmod +x /run/start.sh
