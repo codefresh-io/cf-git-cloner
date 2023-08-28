@@ -6,6 +6,7 @@ RUN apt-get update && \
   apt-get clean
 
 ARG GIT_LFS_VERSION=3.4.0
+ARG TARGETPLATFORM
 
 RUN case ${TARGETPLATFORM} in \
    "linux/amd64")  OS_ARCH=amd64  ;; \
