@@ -2,7 +2,7 @@
 FROM ubuntu:jammy-20231004
 
 RUN apt-get update && \
-  apt-get install -y curl openssl git && \
+  apt-get install -y curl bash openssl git && \
   apt-get clean
 
 # git-lfs v3.4.0 - last available at the 23.10.2023 and it contains bug. Don't update to the version 3.4.0 !!!
