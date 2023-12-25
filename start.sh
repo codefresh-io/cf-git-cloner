@@ -76,6 +76,22 @@ git_checkout () {
   git checkout $revision
 }
 
+init_and_add_remote() {
+    git_retry git init
+    git_retry git remote add origin $REPO
+}
+
+git_init_and_fetch() {
+    init_and_add_remote
+
+    if [ -n "$REVISION" ]; then
+        if [ -n "$DEPTH" ]; then
+          eval $GIT_FETCH_COMMAND
+        fi
+      git_checkout
+    fi
+}
+
 trap exit_trap EXIT
 set -e
 
@@ -174,6 +190,14 @@ else
   GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR"
 fi
 
+if [ -n "$FETCH" ]; then
+  if [ -n "$DEPTH" ]; then
+    GIT_FETCH_COMMAND = "git_retry fetch --depth=$DEPTH origin $REVISION"
+  else
+    GIT_FETCH_COMMAND = "git_retry fetch origin $REVISION"
+  fi
+fi
+
 # Check if the cloned dir already exists from previous builds
 if [ -d "$CLONE_DIR" ]; then
 
@@ -215,31 +239,40 @@ if [ -d "$CLONE_DIR" ]; then
       fi
   else
       # The folder already exists but it is not a git repository
-      # Clean folder and clone a fresh copy on current directory
-      cd ..
-      rm -rf $CLONE_DIR
-      eval $GIT_COMMAND
-      cd $CLONE_DIR
+      if [ -n "$FETCH" ]; then
+        git_init_and_fetch
+      else
+        # Clean folder and clone a fresh copy on current directory
+        cd ..
+        rm -rf $CLONE_DIR
+        eval $GIT_COMMAND
+        cd $CLONE_DIR
 
-      if [ -n "$REVISION" ]; then
-          if [ -n "$DEPTH" ]; then
-            git_retry git remote set-branches origin "*"
-            git_retry git fetch --depth=$DEPTH
-          fi
-        git_checkout
+        if [ -n "$REVISION" ]; then
+            if [ -n "$DEPTH" ]; then
+              git_retry git remote set-branches origin "*"
+              git_retry git fetch --depth=$DEPTH
+            fi
+          git_checkout
+        fi
       fi
   fi
 else
 
  # Clone a fresh copy
-  eval $GIT_COMMAND
-  cd $CLONE_DIR
-  if [ -n "$REVISION" ]; then
-      if [ -n "$DEPTH" ]; then
-        git_retry git remote set-branches origin "*"
-        git_retry git fetch --depth=$DEPTH
-      fi
-    git_checkout
+  if [ -n "$FETCH" ]; then
+    mkdir $CLONE_DIR
+    cd $CLONE_DIR
+    git_init_and_fetch
+  else
+    eval $GIT_COMMAND
+    cd $CLONE_DIR
+    if [ -n "$REVISION" ]; then
+        if [ -n "$DEPTH" ]; then
+          git_retry git remote set-branches origin "*"
+          git_retry git fetch --depth=$DEPTH
+        fi
+      git_checkout
+    fi
   fi
-
 fi
