@@ -237,7 +237,7 @@ else
   if [ -n "$REVISION" ]; then
       if [ -n "$DEPTH" ]; then
         git_retry git remote set-branches origin "*"
-        git_retry git fetch --depth=$DEPTH
+        git_retry git fetch origin $REVISION --depth=$DEPTH
       fi
     git_checkout
   fi
