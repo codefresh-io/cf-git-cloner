@@ -185,7 +185,7 @@ if [ -n "$SPARE_CHECKOUT" ]; then
  fi
 
 if [ -n "$DEPTH" ]; then
-  GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH"
+  GIT_COMMAND="git_retry git clone --depth=$DEPTH" $REPO $CLONE_DIR
 else
   GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR"
 fi
@@ -263,6 +263,7 @@ if [ -d "$CLONE_DIR" ]; then
 else
 
  # Clone a fresh copy
+
   if [ -n "$FETCH" ]; then
     echo 'Fetching updates according to revision from fresh copy'
     mkdir $CLONE_DIR
