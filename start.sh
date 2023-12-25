@@ -240,16 +240,19 @@ if [ -d "$CLONE_DIR" ]; then
   else
       # The folder already exists but it is not a git repository
       if [ -n "$FETCH" ]; then
+        echo 'Fetching updates according to revision'
         git_init_and_fetch
       else
         # Clean folder and clone a fresh copy on current directory
         cd ..
         rm -rf $CLONE_DIR
+        echo 'cloning repository'
         eval $GIT_COMMAND
         cd $CLONE_DIR
 
         if [ -n "$REVISION" ]; then
             if [ -n "$DEPTH" ]; then
+              echo 'Shallow fetch'
               git_retry git remote set-branches origin "*"
               git_retry git fetch --depth=$DEPTH
             fi
@@ -261,14 +264,17 @@ else
 
  # Clone a fresh copy
   if [ -n "$FETCH" ]; then
+    echo 'Fetching updates according to revision from fresh copy'
     mkdir $CLONE_DIR
     cd $CLONE_DIR
     git_init_and_fetch
   else
+    echo 'cloning repository from fresh copy'
     eval $GIT_COMMAND
     cd $CLONE_DIR
     if [ -n "$REVISION" ]; then
         if [ -n "$DEPTH" ]; then
+          echo 'Shallow fetch'
           git_retry git remote set-branches origin "*"
           git_retry git fetch --depth=$DEPTH
         fi
