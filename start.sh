@@ -184,12 +184,6 @@ if [ -n "$SPARE_CHECKOUT" ]; then
     exit 0
  fi
 
-if [ -n "$DEPTH" ]; then
-  GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH"
-else
-  GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR"
-fi
-
 if [ -n "$FETCH" ]; then
   if [ -n "$DEPTH" ]; then
     GIT_FETCH_COMMAND="git_retry git fetch --depth=$DEPTH origin $REVISION"
