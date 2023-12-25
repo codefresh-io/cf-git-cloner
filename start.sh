@@ -184,12 +184,10 @@ if [ -n "$SPARE_CHECKOUT" ]; then
     exit 0
  fi
 
-if [ -n "$FETCH" ]; then
-  if [ -n "$DEPTH" ]; then
-    GIT_FETCH_COMMAND="git_retry git fetch --depth=$DEPTH origin $REVISION"
-  else
-    GIT_FETCH_COMMAND="git_retry git fetch origin $REVISION"
-  fi
+if [ -n "$DEPTH" ]; then
+  GIT_FETCH_COMMAND="git_retry git fetch --depth=$DEPTH origin $REVISION"
+else
+  GIT_FETCH_COMMAND="git_retry git fetch origin $REVISION"
 fi
 
 # Check if the cloned dir already exists from previous builds
