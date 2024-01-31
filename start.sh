@@ -169,9 +169,9 @@ if [ -n "$SPARE_CHECKOUT" ]; then
  fi
 
 if [ -n "$DEPTH" ]; then
-  GIT_COMMAND="git_retry git clone --filter=blob:none $REPO $CLONE_DIR --depth=$DEPTH"
+  GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR --depth=$DEPTH"
 else
-  GIT_COMMAND="git_retry git clone --filter=blob:none $REPO $CLONE_DIR"
+  GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR"
 fi
 
 if [ -z "$CLONE_BLOBS" ] || [ "$CLONE_BLOBS" != "true" ]; then
