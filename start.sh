@@ -169,10 +169,14 @@ if [ -n "$SPARE_CHECKOUT" ]; then
  fi
 
 if [ -n "$DEPTH" ]; then
-    echo "ETI TEST 2 !!!!!!!!"
   GIT_COMMAND="git_retry git clone --filter=blob:none $REPO $CLONE_DIR --depth=$DEPTH"
 else
   GIT_COMMAND="git_retry git clone --filter=blob:none $REPO $CLONE_DIR"
+fi
+
+if [ -z "$CLONE_BLOBS" ] || [ "$CLONE_BLOBS" != "true" ]; then
+  echo "--filter=blob:none"
+  GIT_COMMAND+=" --filter=blob:none"
 fi
 
 # Check if the cloned dir already exists from previous builds
