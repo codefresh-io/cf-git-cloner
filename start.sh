@@ -175,6 +175,7 @@ else
 fi
 
 if [ "$EXCLUDE_BLOB" == "true" ]; then
+  echo "--filter=blob:none"
   GIT_COMMAND+=" --filter=blob:none"
 fi
 
