@@ -174,7 +174,7 @@ else
   GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR"
 fi
 
-if [ -z "$CLONE_BLOBS" ] || [ "$CLONE_BLOBS" != "true" ]; then
+if [ -z "$EXCLUDE_BLOB" ] || [ "$EXCLUDE_BLOB" == "true" ]; then
   echo "--filter=blob:none"
   GIT_COMMAND+=" --filter=blob:none"
 fi
