@@ -174,6 +174,10 @@ else
   GIT_COMMAND="git_retry git clone $REPO $CLONE_DIR"
 fi
 
+if [ "$EXCLUDE_BLOBS" = "true" ]; then
+  GIT_COMMAND+=" --filter=blob:none"
+fi
+
 # Check if the cloned dir already exists from previous builds
 if [ -d "$CLONE_DIR" ]; then
 
