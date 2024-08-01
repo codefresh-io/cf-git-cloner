@@ -1,15 +1,23 @@
 #moving to ubuntu instead of debian to solve high vulnerabilities
-FROM ubuntu:noble-20240114
+FROM ubuntu:jammy-20230816
 
 RUN apt-get update && \
   apt-get install -y curl bash openssl git && \
   apt-get clean
 
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash
-RUN apt list git-lfs -a && \
-    apt-get install git-lfs=3.4.1-1 && \
-    git lfs install
+ARG GIT_LFS_VERSION=3.4.0
+ARG TARGETPLATFORM
 
+# installing git-lfs
+RUN case ${TARGETPLATFORM} in \
+   "linux/amd64")  OS_ARCH=amd64  ;; \
+   "linux/arm64")  OS_ARCH=arm64  ;; \
+    esac \
+    && curl -sL https://github.com/git-lfs/git-lfs/releases/download/v${GIT_LFS_VERSION}/git-lfs-linux-${OS_ARCH}-v${GIT_LFS_VERSION}.tar.gz -o "git-lfs.tar.gz" && \
+    tar -xvzf "git-lfs.tar.gz" && \
+    chmod +x git-lfs-${GIT_LFS_VERSION}/install.sh && \
+    rm git-lfs.tar.gz && \
+    git-lfs-${GIT_LFS_VERSION}/install.sh
 #installing busybox
 ARG BUSYBOX_VERSION=1.31.0
 
