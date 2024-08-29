@@ -214,9 +214,6 @@ if [ -d "$CLONE_DIR" ]; then
           git_retry git fetch --tags
       fi
 
-
-      echo "Fetching the updates from origin"
-      git_retry git fetch --tags
       git remote set-head origin --auto
 
       if [ -n "$REVISION" ]; then
