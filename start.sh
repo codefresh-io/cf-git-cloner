@@ -199,11 +199,13 @@ if [ -d "$CLONE_DIR" ]; then
       git gc --force
       git_retry git remote prune origin
 
-      echo "Fetching the updates from origin"
+
 #      git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*"
       if [ -n "$DEPTH" ]; then
+         echo "Fetching the updates from origin with depth $DEPTH"
          git_retry git fetch origin --prune "+refs/tags/*:refs/tags/*" --depth=$DEPTH
       else
+         echo "Fetching the updates from origin"
          git_retry git fetch origin --prune "+refs/tags/*:refs/tags/*"
       fi
       git remote set-head origin --auto
