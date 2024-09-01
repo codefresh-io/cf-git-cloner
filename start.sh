@@ -214,7 +214,7 @@ if [ -d "$CLONE_DIR" ]; then
 
           # If the revision is identical to the current branch we can just reset it to the latest changes. This isn't needed when running detached
           if [ "$REVISION" == "$CURRENT_BRANCH" ]; then
-             echo 'Resetting current branch $REVISION to latest changes...'
+             echo "Resetting current branch $REVISION to latest changes..."
              git reset --hard origin/$REVISION
           fi
       fi
