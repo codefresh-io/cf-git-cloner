@@ -207,7 +207,7 @@ if [ -d "$CLONE_DIR" ]; then
           # This command fetches updates from all configured remotes in your repository, not just from "origin".
           echo "Fetching updates from origin"
           git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*"
-          git fetch --tags
+          git_retry git fetch --tags
       fi
 
       git remote set-head origin --auto
