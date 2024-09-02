@@ -200,10 +200,10 @@ if [ -d "$CLONE_DIR" ]; then
       git_retry git remote prune origin
 
       if [ -n "$SKIP_TAGS_ON_UPDATE" ]; then
-          echo "Fetching updates from origin ${DEPTH:+ with depth $DEPTH}, skipping tags"
-          git_retry git fetch origin --prune --no-tags ${DEPTH:+ --depth=$DEPTH}
+          echo "Fetching updates from origin${DEPTH:+ with depth $DEPTH}, skipping tags"
+          git_retry git fetch origin ${REVISION:+$REVISION} --prune --no-tags ${DEPTH:+ --depth=$DEPTH}
       else
-          echo "Fetching updates from origin ${DEPTH:+ with depth $DEPTH}"
+          echo "Fetching updates from origin${DEPTH:+ with depth $DEPTH}"
           git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*" ${DEPTH:+ --depth=$DEPTH}
       fi
 
