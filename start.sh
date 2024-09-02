@@ -207,8 +207,6 @@ if [ -d "$CLONE_DIR" ]; then
           git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*" ${DEPTH:+ --depth=$DEPTH}
       fi
 
-
-
       git remote set-head origin --auto
 
       if [ -n "$REVISION" ]; then
