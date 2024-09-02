@@ -203,7 +203,7 @@ if [ -d "$CLONE_DIR" ]; then
           echo "Fetching updates from origin${DEPTH:+ with depth $DEPTH}, skipping tags"
           git_retry git fetch origin ${REVISION:+$REVISION} --prune --no-tags ${DEPTH:+ --depth=$DEPTH}
       else
-          # In order to not change logic that already working im keeping git_retry git fetch --tags
+          # In order to not change logic that already working we keeping git_retry git fetch --tags
           # This command fetches updates from all configured remotes in your repository, not just from "origin".
           echo "Fetching updates from origin"
           git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*"
