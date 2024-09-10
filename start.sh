@@ -17,7 +17,7 @@ exit_trap () {
 retry_script () {
   echo "Retrying git clone operation..."
   cd ../
-  rm -rf "$CLONE_DIR"
+  rm -rf $CLONE_DIR
   export IS_RETRY=true
   echo "Re-executing script with arguments: $@"
   $0 "$@"
