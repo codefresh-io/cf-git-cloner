@@ -2,10 +2,12 @@
 
 exit_trap () {
   local lc="$BASH_COMMAND" rc=$?
+  echo "Exit trap triggered with command: [$lc] and exit code [$rc]"
   if [ "$rc" = 0 ]; then
     return
   fi
   if [ "$CLEAN_GIT_LOCK_FILES" = "true" ] && [ "$IS_RETRY" != "true" ]; then
+    echo "Cleaning git lock files and retrying the script..."
     retry_script
     exit $?
   fi
@@ -15,13 +17,15 @@ exit_trap () {
 retry_script () {
   echo "Retrying git clone operation..."
   cd ../
-  rm -rf $CLONE_DIR
+  rm -rf "$CLONE_DIR"
   export IS_RETRY=true
-  $0 $@
+  echo "Re-executing script with arguments: $@"
+  $0 "$@"
 }
 
 git_retry () {
 # Retry git on exit code 128
+echo "Executing git command with retry logic: $@"
 (
    set +e
    RETRY_ON_SIGNAL=128
@@ -205,6 +209,7 @@ if [ -d "$CLONE_DIR" ]; then
       else
           echo "Fetching updates from origin"
           git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*" ${DEPTH:+ --depth=$DEPTH}
+          echo "DONE Fetching updates from origin"
       fi
 
       git remote set-head origin --auto
