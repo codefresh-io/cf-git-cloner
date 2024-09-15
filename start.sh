@@ -2,12 +2,10 @@
 
 exit_trap () {
   local lc="$BASH_COMMAND" rc=$?
-  echo "Exit trap triggered with command: [$lc] and exit code [$rc]"
   if [ "$rc" = 0 ]; then
     return
   fi
   if [ "$CLEAN_GIT_LOCK_FILES" = "true" ] && [ "$IS_RETRY" != "true" ]; then
-    echo "Cleaning git lock files and retrying the script..."
     retry_script
     exit $?
   fi
@@ -19,13 +17,11 @@ retry_script () {
   cd ../
   rm -rf $CLONE_DIR
   export IS_RETRY=true
-  echo "Re-executing script with arguments: $@"
-  $0 "$@"
+  $0 $@
 }
 
 git_retry () {
 # Retry git on exit code 128
-echo "Executing git command with retry logic: $@"
 (
    set +e
    RETRY_ON_SIGNAL=128
@@ -34,31 +30,18 @@ echo "Executing git command with retry logic: $@"
    until [[ "$TRY_NUM" -ge "$MAX_TRIES" ]]; do
       "${COMMAND[@]}"  # Use "${COMMAND[@]}" to preserve arguments with quotes
       EXIT_CODE=$?
-
-      # Log the command output and error messages
-      echo "Command output (stdout):"
-      cat "$OUTPUT_LOG"
-      echo "Command error (stderr):"
-      cat "$ERROR_LOG"
-
       if [[ $EXIT_CODE == 0 ]]; then
-        echo "Command succeeded on attempt $TRY_NUM."
         break
       elif [[ $EXIT_CODE == "$RETRY_ON_SIGNAL" ]]; then
         echo "Failed with Exit Code $EXIT_CODE - try $TRY_NUM "
         TRY_NUM=$(( ${TRY_NUM} + 1 ))
         sleep $RETRY_WAIT
       else
-        echo "Command failed with exit code $EXIT_CODE. No retry configured for this code."
-        echo "Failed command: ${COMMAND[*]}"
-        echo "Exit Code: $EXIT_CODE"
-        echo "Output Log: $OUTPUT_LOG"
-        echo "Error Log: $ERROR_LOG"
         break
       fi
-    done
-    return $EXIT_CODE
-  )
+   done
+   return $EXIT_CODE
+   )
 }
 
 upsert_remote_alias () {
@@ -220,9 +203,8 @@ if [ -d "$CLONE_DIR" ]; then
           echo "Fetching updates from origin${DEPTH:+ with depth $DEPTH}, skipping tags"
           git_retry git fetch origin ${REVISION:+$REVISION} --no-tags ${DEPTH:+ --depth=$DEPTH}
       else
-          echo "Fetching updates from origin"
-          git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*" ${DEPTH:+ --depth=$DEPTH}
-          echo "DONE Fetching updates from origin"
+          echo "Fetching updates from origin${DEPTH:+ with depth $DEPTH}"
+          git_retry git fetch origin ${REVISION:+$REVISION} --tags --prune "+refs/tags/*:refs/tags/*" ${DEPTH:+ --depth=$DEPTH}
       fi
 
       git remote set-head origin --auto
