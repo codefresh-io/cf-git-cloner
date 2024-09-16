@@ -203,8 +203,8 @@ if [ -d "$CLONE_DIR" ]; then
           echo "Fetching updates from origin${DEPTH:+ with depth $DEPTH}, skipping tags"
           git_retry git fetch origin ${REVISION:+$REVISION} --no-tags ${DEPTH:+ --depth=$DEPTH}
       else
-          echo "Fetching updates from origin${DEPTH:+ with depth $DEPTH}"
-          git_retry git fetch origin ${REVISION:+$REVISION} --tags --prune "+refs/tags/*:refs/tags/*" ${DEPTH:+ --depth=$DEPTH}
+          echo "Fetching updates from origin"
+          git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*" ${DEPTH:+ --depth=$DEPTH}
       fi
 
       git remote set-head origin --auto
@@ -233,7 +233,7 @@ if [ -d "$CLONE_DIR" ]; then
       if [ -n "$REVISION" ]; then
           if [ -n "$DEPTH" ]; then
             git_retry git remote set-branches origin "*"
-            git_retry git fetch origin $REVISION --depth=$DEPTH
+            git_retry git origin $REVISION fetch --depth=$DEPTH
           fi
         git_checkout
       fi
