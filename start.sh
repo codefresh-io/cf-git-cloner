@@ -198,15 +198,10 @@ if [ -d "$CLONE_DIR" ]; then
       git clean -df
       git gc --force
       git_retry git remote prune origin
+      git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*"
 
-      if [ -n "$SKIP_TAGS_ON_UPDATE" ]; then
-          echo "Fetching updates from origin${DEPTH:+ with depth $DEPTH}, skipping tags"
-          git_retry git fetch origin ${REVISION:+$REVISION} --no-tags ${DEPTH:+ --depth=$DEPTH}
-      else
-          echo "Fetching updates from origin"
-          git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*" ${DEPTH:+ --depth=$DEPTH}
-      fi
-
+      echo "Fetching the updates from origin"
+      git_retry git fetch --tags
       git remote set-head origin --auto
 
       if [ -n "$REVISION" ]; then
@@ -218,7 +213,7 @@ if [ -d "$CLONE_DIR" ]; then
 
           # If the revision is identical to the current branch we can just reset it to the latest changes. This isn't needed when running detached
           if [ "$REVISION" == "$CURRENT_BRANCH" ]; then
-             echo "Resetting current branch $REVISION to latest changes..."
+             echo 'Resetting current branch $REVISION to latest changes...'
              git reset --hard origin/$REVISION
           fi
       fi
