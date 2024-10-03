@@ -1,5 +1,5 @@
 #moving to ubuntu instead of debian to solve high vulnerabilities
-FROM ubuntu:noble-20240605
+FROM ubuntu:noble-20240904.1
 
 RUN apt-get update && \
   apt-get install -y curl bash openssl git && \
