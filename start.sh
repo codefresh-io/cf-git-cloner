@@ -205,6 +205,7 @@ if [ -d "$CLONE_DIR" ]; then
       else
           echo "Fetching updates from origin"
           git_retry git fetch origin --tags --prune "+refs/tags/*:refs/tags/*"
+          git_retry git fetch --tags
       fi
 
       git remote set-head origin --auto
